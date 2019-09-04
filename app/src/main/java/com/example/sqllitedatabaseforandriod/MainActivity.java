@@ -2,6 +2,7 @@ package com.example.sqllitedatabaseforandriod;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
@@ -16,7 +17,7 @@ import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
 
-    //we need the name for our dataBase
+    //we need the name for our dataBase and we created Dtabase name public static so we can call dataBase name in other classes
     public static final String DATABASE_NAME = "mydatabase";
     SQLiteDatabase mDataBase;
     EditText editTextName, editTextSalary;
@@ -48,6 +49,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
+                Intent intent = new Intent(MainActivity.this,EmployeeDetilActivity.class);
+                startActivity(intent);
+
             }
         });
 
@@ -66,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
     //Now we have to Create Table for that we are creating seprate method
     private void CreateTable() {
         //to create table first we have to create Query we we can use this Query to creaate our database table
-        String sql = "CREATE TABLE employees (\n" +
+        String sql = "CREATE TABLE IF NOT EXISTS employees (\n" +
                 "    id INTEGER NOT NULL CONSTRAINT employees_pk PRIMARY KEY AUTOINCREMENT,\n" +
                 "    name varchar(200) NOT NULL,\n" +
                 "    department varchar(200) NOT NULL,\n" +
