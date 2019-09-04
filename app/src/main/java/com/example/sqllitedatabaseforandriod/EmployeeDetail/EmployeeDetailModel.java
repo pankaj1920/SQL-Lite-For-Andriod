@@ -1,4 +1,4 @@
-package com.example.sqllitedatabaseforandriod;
+package com.example.sqllitedatabaseforandriod.EmployeeDetail;
 
 public class EmployeeDetailModel {
     int id;

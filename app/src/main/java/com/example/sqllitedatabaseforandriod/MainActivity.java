@@ -12,6 +12,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.sqllitedatabaseforandriod.EmployeeDetail.EmployeeDetilActivity;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -49,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                Intent intent = new Intent(MainActivity.this,EmployeeDetilActivity.class);
+                Intent intent = new Intent(MainActivity.this, EmployeeDetilActivity.class);
                 startActivity(intent);
 
             }

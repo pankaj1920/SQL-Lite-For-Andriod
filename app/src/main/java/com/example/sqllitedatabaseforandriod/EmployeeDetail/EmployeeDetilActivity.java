@@ -1,4 +1,4 @@
-package com.example.sqllitedatabaseforandriod;
+package com.example.sqllitedatabaseforandriod.EmployeeDetail;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -7,10 +7,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.widget.ListView;
 
+import com.example.sqllitedatabaseforandriod.MainActivity;
+import com.example.sqllitedatabaseforandriod.R;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.example.sqllitedatabaseforandriod.MainActivity.DATABASE_NAME;
 
 public class EmployeeDetilActivity extends AppCompatActivity {
 
@@ -70,7 +71,7 @@ public class EmployeeDetilActivity extends AppCompatActivity {
             } while (cursor.moveToNext());
             //this loop will run until cursor.moveToNext is true
 
-            EmployeCustomAdapter adapter = new EmployeCustomAdapter(this, R.layout.employee_custom_lsitview, employeeList);
+            EmployeCustomAdapter adapter = new EmployeCustomAdapter(this, R.layout.employee_custom_lsitview, employeeList,mDataBase);
             listViewEmployees.setAdapter(adapter);
         }
 
