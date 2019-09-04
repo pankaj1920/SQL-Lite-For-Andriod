@@ -18,6 +18,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.sqllitedatabaseforandriod.DatabaseManager;
 import com.example.sqllitedatabaseforandriod.R;
 
 import java.util.List;
@@ -27,9 +28,9 @@ public class EmployeCustomAdapter extends ArrayAdapter<EmployeeDetailModel> {
     Context context;
     int layoutResource;
     List<EmployeeDetailModel> employeeList;
-    SQLiteDatabase mDatabase;
+    DatabaseManager mDatabase;
 
-    public EmployeCustomAdapter(@NonNull Context context, int layoutResource, @NonNull List<EmployeeDetailModel> employeeList, SQLiteDatabase mDatabase) {
+    public EmployeCustomAdapter(@NonNull Context context, int layoutResource, @NonNull List<EmployeeDetailModel> employeeList, DatabaseManager mDatabase) {
         super(context, layoutResource, employeeList);
         this.context = context;
         this.layoutResource = layoutResource;
@@ -124,17 +125,18 @@ public class EmployeCustomAdapter extends ArrayAdapter<EmployeeDetailModel> {
                     return;
                 }
 
-                //afte validation we need to update Database so we will create a Query
-                String sql = "UPDATE employees SET name = ? ,department = ?, salary = ? WHERE id = ? ";
+                //update Employee
+               if (mDatabase.updateEmployee(employeeDetail.getId() , name,department,Double.parseDouble(salary)) ) {
+                   Toast.makeText(context, "Updated Sucessfully", Toast.LENGTH_SHORT).show();
+                   //this method will call dataBase again as we update the list
+                   LoadEmployessFromDAtabaseAgain();
 
-                //execute the Query
-                mDatabase.execSQL(sql, new String[]{name, department, salary, id});
-                Toast.makeText(context, "Updated Sucessfully", Toast.LENGTH_SHORT).show();
+                   alertDialog.dismiss();
+               }else {
+                   Toast.makeText(context, "Not Updsated", Toast.LENGTH_SHORT).show();
+               }
 
-                //this method will call dataBase again as we update the list
-                LoadEmployessFromDAtabaseAgain();
-
-                alertDialog.dismiss();
+                
 
             }
         });
@@ -144,12 +146,7 @@ public class EmployeCustomAdapter extends ArrayAdapter<EmployeeDetailModel> {
     private void LoadEmployessFromDAtabaseAgain() {
 
 
-        //in this method we need to fetch Updated EmployeeDetail so we need to make SQL Query
-        //we want to fetch all the value from our dataBase
-        //for that we use SELECT * FROM DataBase Name i.e employee
-        String sql = "SELECT * FROM employees";
-        // to fetch data we use rawQuery() it return a cursor and in cursor we have all the data so we create cursor object
-        Cursor cursor = mDatabase.rawQuery(sql, null); // now this cursor is having all the data
+        Cursor cursor = mDatabase.getEmployeeDetail(); // now this cursor is having all the data
 
         //there maye be a condition that this cursor doesn't have any data so, we have to check weather it contain data or not
         // otherwie it will exception
@@ -164,7 +161,7 @@ public class EmployeCustomAdapter extends ArrayAdapter<EmployeeDetailModel> {
             //heer we will get updated values
             employeeList.add(new EmployeeDetailModel(
                     //here we are getting data from Database and we have to write in sequence
-                    cursor.getInt(0), //for id
+                     cursor.getInt(0), //for id
                     cursor.getString(1),// for name
                     cursor.getString(2),// for department
                     cursor.getString(3),// for joinindate
@@ -188,11 +185,13 @@ public class EmployeCustomAdapter extends ArrayAdapter<EmployeeDetailModel> {
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                //when user click on yes we need to delet employee from database for that we need Qery
-                String sql = "DELETE FROM employees WHERE id = ? ";
-                mDatabase.execSQL(sql, new String[]{String.valueOf(employeeDetail.getId())});
-                // after deteting Employee we need to load database again
-                LoadEmployessFromDAtabaseAgain();
+
+              if(mDatabase.DeletEmployee(employeeDetail.getId())){
+
+                  Toast.makeText(context, "Deleted", Toast.LENGTH_SHORT).show();
+                    // after deteting Employee we need to load database again
+                    LoadEmployessFromDAtabaseAgain();
+                }
 
             }
         });

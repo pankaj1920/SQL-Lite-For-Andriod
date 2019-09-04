@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
 
     //we need the name for our dataBase and we created Dtabase name public static so we can call dataBase name in other classes
     public static final String DATABASE_NAME = "mydatabase";
-    SQLiteDatabase mDataBase;
+    DatabaseManager mDataBase;
     EditText editTextName, editTextSalary;
     Spinner spinnerDepartment;
     Button buttonAddEmployee;
@@ -31,6 +31,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //Callin DatabaseManage Instance
+        mDataBase = new DatabaseManager(this);
 
 
         editTextName = (EditText) findViewById(R.id.editTextName);
@@ -57,32 +60,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //now we will create dataBase ... to create Database we Call a method
-        //it will take Three parameter 1- dataBaseName, 2-Mode ,3-CursorFactory
-        // this Method will create database with " mydatabase name" and if dataBase already Exist with this name it will open the dataBase
-        mDataBase = openOrCreateDatabase(DATABASE_NAME, MODE_PRIVATE, null);
-
-        //Call merhod to create Table
-        CreateTable();
-
-        // now we have to insert value in this table that we will get from editText
-
     }
 
-    //Now we have to Create Table for that we are creating seprate method
-    private void CreateTable() {
-        //to create table first we have to create Query we we can use this Query to creaate our database table
-        String sql = "CREATE TABLE IF NOT EXISTS employees (\n" +
-                "    id INTEGER NOT NULL CONSTRAINT employees_pk PRIMARY KEY AUTOINCREMENT,\n" +
-                "    name varchar(200) NOT NULL,\n" +
-                "    department varchar(200) NOT NULL,\n" +
-                "    joiningdate datetime NOT NULL,\n" +
-                "    salary double NOT NULL\n" +
-                ");";
 
-        //to Execute the Query and this Query will make table in our datBase with name employee
-        mDataBase.execSQL(sql);
-    }
 
     private void addEmployee() {
 
@@ -109,15 +89,11 @@ public class MainActivity extends AppCompatActivity {
 
 
         //after vaildation is complete now we can save the value in database for that again we need to create SQL Query
-        //here we defines colom inside () parentheses we don't need id bcz id is auto increment from above query
-        //so in parenthese we will pass name , department joiningdate,salary from above query
-        //to Inset we use INSERT INTO TableName i.e employee
-        String sql = "INSERT INTO employees(name,department,joiningdate,salary)" +
-                "VALUES (?,?,?,?)"; // here 4 ? bcz we need to bind four values
-
-        //here we will take execSQL with bindArgs do that we can bind data to values
-        mDataBase.execSQL(sql, new String[]{name, department, joiningDate, salary});
-        Toast.makeText(this, "Employee Added", Toast.LENGTH_SHORT).show();
+       if (mDataBase.addEmployee(name,department,joiningDate,Double.parseDouble(salary))) {
+           Toast.makeText(this, "Employee Added", Toast.LENGTH_SHORT).show();
+       }else {
+           Toast.makeText(this, "Employee Not Added", Toast.LENGTH_SHORT).show();
+       }
 
     }
 
