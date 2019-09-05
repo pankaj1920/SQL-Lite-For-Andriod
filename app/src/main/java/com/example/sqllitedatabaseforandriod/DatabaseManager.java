@@ -6,8 +6,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import androidx.annotation.Nullable;
-
 public class DatabaseManager extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "EmployeeDatabase";
@@ -30,7 +28,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
         //here we will createDatabase
         //to create table first we have to create Query we we can use this Query to creaate our database table
-        String sql = "CREATE TABLE employees (\n" +
+        String sql = "CREATE TABLE " + TABLE_NAME + " (\n" +
                 "    " + COLUMN_ID + " INTEGER NOT NULL CONSTRAINT employees_pk PRIMARY KEY AUTOINCREMENT,\n" +
                 "    " + COLUMN_NAME + " varchar(200) NOT NULL,\n" +
                 "    " + COLUMN_DEPT + " varchar(200) NOT NULL,\n" +
